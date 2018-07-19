@@ -7,32 +7,53 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
-@Table(name="Customer")
-public class Customer extends BaseEntity{
+@Table(name = "Customer")
+public class Customer extends BaseEntity {
 	private String firstName;
 	private String LastName;
-	@OneToMany(targetEntity=Contact.class)
-	@JoinColumn(referencedColumnName="id",name="customer_id")
+	@OneToMany(targetEntity = Contact.class)
+	@JoinColumn(referencedColumnName = "id", name = "customer_id")
 	private Set<Contact> contacts;
+
+	@OneToMany(targetEntity = PurchaseOrder.class)
+	@JoinColumn(referencedColumnName = "id", name = "customer_id")
+	private Set<PurchaseOrder> purchaseOrders;
+
 	public String getFirstName() {
 		return firstName;
 	}
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	public String getLastName() {
 		return LastName;
 	}
+
 	public void setLastName(String lastName) {
 		LastName = lastName;
 	}
+
 	public Set<Contact> getContacts() {
 		return contacts;
 	}
+
 	public void setContacts(Set<Contact> contacts) {
 		this.contacts = contacts;
 	}
+	
+
+	public Set<PurchaseOrder> getPurchaseOrders() {
+		return purchaseOrders;
+	}
+
+	public void setPurchaseOrders(Set<PurchaseOrder> purchaseOrders) {
+		this.purchaseOrders = purchaseOrders;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -41,6 +62,7 @@ public class Customer extends BaseEntity{
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -62,6 +84,5 @@ public class Customer extends BaseEntity{
 			return false;
 		return true;
 	}
-	
-	
+
 }
