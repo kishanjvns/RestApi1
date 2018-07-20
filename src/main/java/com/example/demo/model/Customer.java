@@ -3,19 +3,31 @@ package com.example.demo.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorOrder;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlNs;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name="customer")
+@XmlAccessorType(XmlAccessType.FIELD)
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "Customer")
 public class Customer extends BaseEntity {
+	@XmlElement(name= "first-name")
 	private String firstName;
+	@XmlElement(name="last-name")
 	private String LastName;
-	@OneToMany(targetEntity = Contact.class)
+	@OneToMany(targetEntity = Contact.class,fetch=FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "id", name = "customer_id")
-	private Set<Contact> contacts;
+	 private Set<Contact> contacts;
 
 	@OneToMany(targetEntity = PurchaseOrder.class)
 	@JoinColumn(referencedColumnName = "id", name = "customer_id")
@@ -44,7 +56,6 @@ public class Customer extends BaseEntity {
 	public void setContacts(Set<Contact> contacts) {
 		this.contacts = contacts;
 	}
-	
 
 	public Set<PurchaseOrder> getPurchaseOrders() {
 		return purchaseOrders;

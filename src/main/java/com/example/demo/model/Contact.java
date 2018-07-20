@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -16,7 +17,7 @@ public class Contact extends BaseEntity {
 	private String emailAddress;
 	@Column(name = "mobile_number")
 	private String mobileNumber;
-	@OneToMany(targetEntity = Address.class)
+	@OneToMany(targetEntity = Address.class,fetch=FetchType.LAZY)
 	@JoinColumn(referencedColumnName = "id", name = "contact_id")
 	private Set<Address> addresses;
 
