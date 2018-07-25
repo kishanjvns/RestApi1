@@ -54,7 +54,7 @@ public class CustomerApi {
 	public Map<String, String> handleCustomeExceptin(BaseException baseException) {
 		Map<String, String> map = new HashMap<>();
 		map.put("ErrorCode", "" + baseException.getErrorCode());
-		map.put("message", baseException.getMsg());
+		map.put("message", baseException.getMessage());
 		return map;
 	}
 }
