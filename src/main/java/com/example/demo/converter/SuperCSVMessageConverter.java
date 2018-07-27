@@ -1,6 +1,12 @@
 package com.example.demo.converter;
 
-import org.springframework.http.HttpHeaders;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Set;
+
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -8,15 +14,6 @@ import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 
 @Component
 public class SuperCSVMessageConverter extends AbstractHttpMessageConverter<Object> {
@@ -37,7 +34,41 @@ public class SuperCSVMessageConverter extends AbstractHttpMessageConverter<Objec
 	protected Object readInternal(Class<? extends Object> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
 		System.out.println(clazz.getName());
-		System.out.println(clazz.getClasses());
+		try {
+			
+			
+			Class targetClass = Class.forName(clazz.getName());
+			
+			Class superClass=targetClass.getSuperclass();
+			while( superClass !=null){				
+				Method[] methods = superClass.getDeclaredMethods();
+				for (Method method : methods) {
+					if (isSetter(method))
+						System.out.println("Public method found: " + method.toString());
+				}
+				 superClass=targetClass.getSuperclass();				
+			}
+			
+			/*Object targetObject = targetClass.newInstance();
+			ArrayList<Method> list = new ArrayList<Method>();
+			Method[] methods = targetClass.getDeclaredMethods();
+			
+			Class superClass= targetClass.getSuperclass();
+			for (Method method : methods)
+				if (isSetter(method))
+					list.add(method);
+			System.out.println(list);
+			Method[] methods2 = targetClass.getDeclaredMethods();
+			for (Method method : methods2) {
+				if (isSetter(method))
+					System.out.println("Public method found: " + method.toString());
+			}*/
+
+		} catch (ClassNotFoundException e) {
+			// Model not mapped
+			e.printStackTrace();
+		}
+		System.out.println(clazz.getClass());
 		return null;
 	}
 
@@ -48,4 +79,8 @@ public class SuperCSVMessageConverter extends AbstractHttpMessageConverter<Objec
 
 	}
 
+	public static boolean isSetter(Method method) {
+		return Modifier.isPublic(method.getModifiers()) && method.getReturnType().equals(void.class)
+				&& method.getParameterTypes().length == 1 && method.getName().matches("^set[A-Z].*");
+	}
 }
